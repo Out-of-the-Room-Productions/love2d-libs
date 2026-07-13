@@ -1,0 +1,2 @@
+---@class Focusable
+---@field setFocus fun(self: self, focus: boolean)

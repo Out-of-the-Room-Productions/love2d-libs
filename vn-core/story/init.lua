@@ -1,10 +1,15 @@
-local storyPart = require "vn.story.part"
-local decision = require "vn.story.decision"
+local storyPart = require "story.part"
+local decision = require "story.decision"
 
----@class Story
+---@alias vn.ContinueResult
+---|"OK"
+---|"NO_ROUTINE"
+---|"WAIT"
+
+---@class vn.Story
 local Story = {
     id = "",
-    ---@type table<string, StoryPart>
+    ---@type table<string, vn.Story.Part>
     parts = {},
     startName = "start",
     playedParts = {},
@@ -16,17 +21,22 @@ local Story = {
     routine = nil
 }
 
----@param o Story
----@return Story
+---@param o vn.Story
+---@return vn.Story
 function Story:create(o)
     o = o or {}
     o.parts = o.parts or {}
     o.playedParts = {}
-    o.partStack = {o.startName or "start"}
-    return setmetatable(o, { __index = Story })
+    local ret = setmetatable(o, { __index = self })
+	ret:setToStart()
+    return ret
 end
 
----@param o StoryPart
+function Story:setToStart()
+	self.partStack = { self.startName or "start" }
+end
+
+---@param o vn.Story.Part
 function Story:addPart(o)
     o = storyPart:create(o)
     self:addAfters(o)
@@ -34,7 +44,7 @@ function Story:addPart(o)
 end
 
 ---@protected
----@param o StoryPart
+---@param o vn.Story.Part
 function Story:addAfters(o)
     if not self.partAfters[o.after] then
         self.partAfters[o.after] = {}
@@ -75,11 +85,12 @@ local function getBranch(t, n)
     end
 
     return decision.Branch:create{
-        condition = cond,
-        play = func
+        condition = cond;
+        play = func;
     }
 end
 
+---@param ... boolean|fun()
 function Story:decision(...)
     local args = {...}
     local dec = decision.Decision:create()
@@ -99,6 +110,7 @@ function Story:decision(...)
 end
 Story.branch = Story.decision
 
+---@return vn.ContinueResult
 function Story:continue()
     if not self.routine or coroutine.status(self.routine) == "dead" then
         self:findNextPart()
@@ -106,15 +118,17 @@ function Story:continue()
 
     if not self.routine then
         Logger:error("story", "unable to continue story, routine is nil")
-        return
+        return "NO_ROUTINE"
     end
 
-    coroutine.resume(self.routine, self)
+    local _, ret = coroutine.resume(self.routine, self)
 
     if coroutine.status(self.routine) == "dead" then
         self.routine = nil
         Logger:verbose("story", "part completed")
-        self:continue()
+        return self:continue()
+	else
+		return ret or "OK"
     end
 end
 

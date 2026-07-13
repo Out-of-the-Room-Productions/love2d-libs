@@ -1,30 +1,36 @@
+local log = Logger:spec("VNCharaBase")
 
-
----@class VNChara
+---@class VNCharaBase
 local VNChara = {
     charaId = "",
     displayName = ""
 }
 
----@param o VNChara
----@return VNChara
+---@param o VNCharaBase
+---@return VNCharaBase
 function VNChara:create(o)
     o = o or {}
     return setmetatable(o, {
-        __index = VNChara,
-        __call = VNChara.__call
+        __index = self,
+        __call  = self.__call
     })
 end
 
----@private
 function VNChara:__call(text)
     self:say(text)
 end
 
----@private
 function VNChara:say(text)
-    Logger:debug(self.displayName, text)
+	log:debug(("%s(%s)"):format(self.displayName, self.charaId), text)
     coroutine.yield()
+end
+
+function VNChara:show(data)
+	
+end
+
+function VNChara:hide(data)
+	
 end
 
 return VNChara

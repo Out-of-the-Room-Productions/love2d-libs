@@ -1,3 +1,5 @@
+local funcs = require "story.funcs"
+
 ---@class Decision
 local Decision = {
     ---@type Branch[]
@@ -46,7 +48,7 @@ end
 function Decision:evaluate(story)
     for _, value in ipairs(self.branches) do
         if value.condition then
-            Globals.runSubRoutine(value.play)
+            funcs.runSubRoutine(value.play)
             Logger:verbose("decision", "returned from subRoutine")
             return
         end

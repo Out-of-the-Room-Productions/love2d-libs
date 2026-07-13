@@ -1,4 +1,4 @@
----@class StoryPart
+---@class vn.Story.Part
 local StoryPart = {
     id = "",
     after = "",
@@ -7,23 +7,23 @@ local StoryPart = {
     play = nil
 }
 
----@param o StoryPart
----@return StoryPart
+---@param o vn.Story.Part
+---@return vn.Story.Part
 function StoryPart:create(o)
     o = o or {}
     return setmetatable(o, { __index = StoryPart })
 end
 
 ---Get this part's priority
----@param self StoryPart
+---@param self vn.Story.Part
 ---@return number
 function StoryPart.getPriority(self, story)
     return self.priority or 0.0
 end
 
 ---Check whether the part is active or not
----@param self StoryPart
----@param story Story
+---@param self vn.Story.Part
+---@param story vn.Story
 ---@return boolean
 function StoryPart.isActive(self, story)
     return true
