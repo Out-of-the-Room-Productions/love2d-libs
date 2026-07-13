@@ -9,8 +9,6 @@ end
 
 local log = Logger:spec("input")
 
-log:debug(filepath)
-log:debug(dirname(filepath))
 
 local event = require(dirname(filepath)..".event")
 
