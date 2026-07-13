@@ -1,4 +1,18 @@
-local event = require "lib.event"
+---@diagnostic disable: different-requires
+local filepath = (...)
+
+local function dirname(path)
+    return path:match("^(.*)%.")
+end
+
+
+
+local log = Logger:spec("input")
+
+log:debug(filepath)
+log:debug(dirname(filepath))
+
+local event = require(dirname(filepath)..".event")
 
 Mouse = {
     pos = {
