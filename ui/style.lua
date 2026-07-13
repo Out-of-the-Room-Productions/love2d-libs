@@ -89,7 +89,6 @@ local Style = {
 function Style:new(o)
     o = o or {}
     setmetatable(o, { __index = Style })
-    self.__index = self
     return o
 end
 

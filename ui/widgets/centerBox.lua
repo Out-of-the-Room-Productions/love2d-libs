@@ -12,6 +12,19 @@ function CenterBox:create(b)
 	return setmetatable(b or {}, { __index = CenterBox })
 end
 
+---@param s Sized
+---@param w number?
+---@param h number?
+---@return CenterBox
+function CenterBox:wrap(s, w, h)
+	local iw, ih = s:getSizeRaw();
+	return self:create {
+		content = s;
+		w = w or iw;
+		h = h or ih;
+	}
+end
+
 function CenterBox:draw(x, y)
 	if not self.content then
 		return

@@ -27,6 +27,10 @@ Mouse = {
 		x = 0.0,
 		y = 0.0
 	},
+	posmult = {
+		x = 1.0,
+		y = 1.0
+	},
     scroll = 0.0,
 	mainBtn = 1,
 	mainDown = false,
@@ -102,6 +106,8 @@ end
 
 function Input:update(dt)
 	Mouse.pos.x, Mouse.pos.y = love.mouse.getPosition()
+	Mouse.pos.x = Mouse.pos.x / Mouse.posmult.x
+	Mouse.pos.y = Mouse.pos.y / Mouse.posmult.y
 
 ---@diagnostic disable-next-line: undefined-global
 	if Camera then Mouse.worldPos.x, Mouse.worldPos.y = Camera:screenToWorld(Mouse.pos.x, Mouse.pos.y) end

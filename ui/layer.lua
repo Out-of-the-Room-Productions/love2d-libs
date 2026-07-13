@@ -50,12 +50,11 @@ end
 
 ---@class Layer : Sized
 local Layer = {
-    ---@type LayerItem[]
-    items = {},
-    ---@type number?
-    w = nil,
-    ---@type number?
-    h = nil
+    items = {};	---@type LayerItem[]
+    w = nil;	---@type number?
+    h = nil;	---@type number?
+
+	doscissor = true;
 }
 function Layer.type() return "Layer" end
 
@@ -71,8 +70,11 @@ function Layer:create(o)
     o = o or {}
     o.items = o.items or {}
     setmetatable(o, { __index = Layer })
-    self.__index = self
     return o
+end
+
+---@protected
+function Layer:drawselfextra(x, y)
 end
 
 ---@protected
@@ -85,13 +87,14 @@ end
 ---@param x integer
 ---@param y integer
 function Layer:draw(x, y)
-    if self.w and self.h then
+    if self.doscissor and self.w and self.h then
         scissor:push(x, y, self.w, self.h)
     end
 
+	self:drawselfextra(x, y)
     self:drawItems(x, y)
 
-    if self.w and self.h then
+    if self.doscissor and self.w and self.h then
         scissor:pop()
     end
 end

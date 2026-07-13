@@ -42,8 +42,7 @@ function nineSliceImage:create(o)
         center = love.graphics.newQuad(o.left, o.top, imW - o.left - o.right, imH - o.top - o.bottom, imW, imH),
     }
 
-    setmetatable(o, self)
-    self.__index = self
+    o = setmetatable(o, self)
     return o
 end
 
