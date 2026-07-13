@@ -69,7 +69,7 @@ end
 function Layer:create(o)
     o = o or {}
     o.items = o.items or {}
-    setmetatable(o, { __index = Layer })
+    setmetatable(o, { __index = self })
     return o
 end
 
