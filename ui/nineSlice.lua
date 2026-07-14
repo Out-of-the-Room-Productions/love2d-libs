@@ -1,4 +1,6 @@
----@class NineSliceImage: Sized
+local sized = require "widgets.sizedDrawable"
+
+---@class NineSliceImage : Sized
 local nineSliceImage = {
     ---@type love.Image
     image = nil,
@@ -68,4 +70,4 @@ function nineSliceImage:draw(x, y)
     love.graphics.draw(self.image, self.quads.center, x + self.left, y + self.top, 0, cW, cH)
 end
 
-return nineSliceImage
+return sized:new(nineSliceImage) --[[@as NineSliceImage]]

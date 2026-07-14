@@ -57,6 +57,8 @@ local Layer = {
 }
 function Layer.type() return "Layer" end
 
+---@param o Layer
+---@return Layer
 function Layer:new(o)
     o = o or {}
     setmetatable(o, { __index = self })

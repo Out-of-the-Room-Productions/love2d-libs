@@ -12,6 +12,8 @@ local Sized = {
 	anchor = UIAnchor.TopLeft
 }
 
+---@param o Sized
+---@return Sized
 function Sized:new(o)
     o = o or {}
     return setmetatable(o, { __index = self })
