@@ -42,9 +42,8 @@ function LayerItem.type() return "LayerItem" end
 ---@return LayerItem
 function LayerItem:fromSized(o)
     local i = {}
-    setmetatable(i, LayerItem)
-    self.__index = self
-    i.item = o
+	i.item = o
+    i = setmetatable(i, { __index = LayerItem })
     return i
 end
 

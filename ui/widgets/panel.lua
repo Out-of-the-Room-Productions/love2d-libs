@@ -24,10 +24,10 @@ function Panel:type() return "Panel" end
 ---@param down? number
 ---@return Panel
 function Panel:wrapItem(it, left, right, up, down)
-	left = left or 5
+	left = left or 0
 	right = right or left
 	up = up or left
-	down = down or left
+	down = down or up or left
 
 	local mar = margin.fromItem(it, up, right, down, left)
 	local w, h = mar:getSizeRaw()
@@ -91,4 +91,4 @@ function Panel:release(p)
 		end
 	end
 
-return Panel
+return Sized:new(Panel) --[[@as Panel]]

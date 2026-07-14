@@ -2,7 +2,9 @@ local sized = require "widgets.sizedDrawable"
 
 ---@class Container : Sized
 local Container = setmetatable({
-    items = nil;	---@type Sized[]
+    items	= nil;	---@type Sized[]
+	min_w	= 0;
+	min_h	= 0;
 }, { __index = sized })
 function Container:type() return "Container" end
 
@@ -47,13 +49,14 @@ function Vertical:type() return "VerticalContainer" end
 function Vertical:create(o)
     o = o or {}
 	o.items = o.items or {}
-    o.center = o.center or false
-    o.extraHeight = o.extraHeight or 0
-    return setmetatable(o, { __index = self })
+	o = setmetatable(o, { __index = self })
+	o.center = o.center or false
+	o.extraHeight = o.extraHeight or 0
+    return o
 end
 
 function Vertical:getSizeRaw()
-    local width, height = 0, 0
+    local width, height = self.min_w or 0, 0
     for i, item in ipairs(self.items) do
         local itemWidth, itemHeight = item:getSizeRaw()
 ---@diagnostic disable-next-line: undefined-field
@@ -64,12 +67,13 @@ function Vertical:getSizeRaw()
             height = height + self.extraHeight
         end
     end
-    return width, height
+    return width, math.max(self.min_h or 0, height)
 end
 
 function Vertical:draw(x, y)
     local currentY = y
     local totalWidth, height = self:getSizeCooked()
+
 	-- love.graphics.rectangle("line", x, y, totalWidth, height)
     for i, item in ipairs(self.items) do
         local itemWidth, itemHeight = item:getSizeCooked()
@@ -104,7 +108,7 @@ end
 
 
 function Horizontal:getSizeRaw()
-    local width, height = 0, 0
+    local width, height = 0, self.min_h or 0
     for _, item in ipairs(self.items) do
         local itemWidth, itemHeight = item:getSizeRaw()
 ---@diagnostic disable-next-line: undefined-field
@@ -112,7 +116,7 @@ function Horizontal:getSizeRaw()
         width = width + itemWidth + self.extraWidth
         height = math.max(height, itemHeight)
     end
-    return width, height
+    return math.max(self.min_w or 0, width), height
 end
 
 function Horizontal:draw(x, y)
