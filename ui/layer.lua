@@ -60,7 +60,7 @@ function Layer.type() return "Layer" end
 
 function Layer:new(o)
     o = o or {}
-    setmetatable(o, { __index = Layer })
+    setmetatable(o, { __index = self })
     return o
 end
 
@@ -71,10 +71,6 @@ function Layer:create(o)
     o.items = o.items or {}
     setmetatable(o, { __index = self })
     return o
-end
-
----@protected
-function Layer:drawselfextra(x, y)
 end
 
 ---@protected
@@ -91,7 +87,6 @@ function Layer:draw(x, y)
         scissor:push(x, y, self.w, self.h)
     end
 
-	self:drawselfextra(x, y)
     self:drawItems(x, y)
 
     if self.doscissor and self.w and self.h then
@@ -289,8 +284,16 @@ function Scroll:getSizeRaw()
 	return self.w or cW, self.h or cH
 end
 
-return {
-    Layer = sized:new(Layer) --[[@as Layer]],
-    Scroll = Layer:new(Scroll) --[[@as ScrollLayer]],
-    Scissor = scissor
+---@class LayerRet
+local ret = {
+    Layer = sized:new(Layer) --[[@as Layer]];
+    Scroll = Layer:new(Scroll) --[[@as ScrollLayer]];
+    Scissor = scissor;
+	---@param self LayerRet
+	---@param o Layer
+	---@return Layer
+	new = function(self, o)
+		return self.Layer:new(o)
+	end
 }
+return ret
